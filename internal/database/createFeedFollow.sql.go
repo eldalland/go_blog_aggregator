@@ -27,10 +27,10 @@ WITH inserted_feed_follow AS (
     $4,
     $5
 )
-    RETURNING id, created_at, updated_at, name, url, user_id, feed_id
+    RETURNING id, created_at, updated_at, user_id, feed_id
 )
 SELECT
-    inserted_feed_follow.id, inserted_feed_follow.created_at, inserted_feed_follow.updated_at, inserted_feed_follow.name, inserted_feed_follow.url, inserted_feed_follow.user_id, inserted_feed_follow.feed_id,
+    inserted_feed_follow.id, inserted_feed_follow.created_at, inserted_feed_follow.updated_at, inserted_feed_follow.user_id, inserted_feed_follow.feed_id,
     feeds.name AS feed_name,
     users.name AS user_name
 FROM inserted_feed_follow
@@ -50,8 +50,6 @@ type CreateFeedFollowRow struct {
 	ID        uuid.UUID
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string
-	Url       string
 	UserID    uuid.UUID
 	FeedID    uuid.UUID
 	FeedName  string
@@ -77,8 +75,6 @@ func (q *Queries) CreateFeedFollow(ctx context.Context, arg CreateFeedFollowPara
 			&i.ID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Name,
-			&i.Url,
 			&i.UserID,
 			&i.FeedID,
 			&i.FeedName,

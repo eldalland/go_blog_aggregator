@@ -46,9 +46,11 @@ func main(){
 	currCommands.register("reset",handlerReset)
 	currCommands.register("users",handlerUsers)
 	currCommands.register("agg",handlerAgg)
-	currCommands.register("addfeed",handlerFeed)
+	currCommands.register("addfeed", loginMiddleware(handlerFeed))
 	currCommands.register("feeds",handlerFeeds)
-	currCommands.register("follow",handlerFollow)
+	currCommands.register("follow",loginMiddleware(handlerFollow))
+	currCommands.register("following",loginMiddleware(handleFollowing))
+	currCommands.register("unfollow", loginMiddleware(handleUnfollow))
 	userInput := os.Args
 	//checks user input for command and args, then calls corresponding handler through run function
 	if len(userInput) < 2{
