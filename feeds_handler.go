@@ -19,7 +19,7 @@ func handlerFeeds(s *state, cmd command) error{
 		}
 		fmt.Printf("%s\n",feed.Name)
 		fmt.Printf("%s\n",feed.Url)
-		fmt.Printf("%s\n",userName)
+		fmt.Printf("uploaded by: %s\n",userName)
 	}
 	return nil
 }

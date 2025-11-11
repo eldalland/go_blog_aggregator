@@ -5,7 +5,7 @@ import ("fmt"
 		"github.com/google/uuid"
 		"os"
 		"github.com/eldalland/go_blog_aggregator/internal/database")
-
+//Has the current user follow the provided already registered feed
 func handlerFollow(s *state, cmd command, user database.User)error{
 	currUrl := cmd.args[0]
 

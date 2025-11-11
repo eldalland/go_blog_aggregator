@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -18,41 +17,35 @@ WITH feedfollows AS (
     WHERE feed_follows.user_id = $1
 )
 SELECT 
-    feedfollows.id, feedfollows.created_at, feedfollows.updated_at, feedfollows.user_id, feedfollows.feed_id,
-    feeds.name AS feed_name,
-    users.name AS user_name
+    feeds.id,
+    feeds.created_at,
+    feeds.updated_at,
+    feeds.name,
+    feeds.url,
+    feeds.user_id,
+    feeds.last_fetched_at
 FROM feedfollows
 INNER JOIN feeds ON feedfollows.feed_id = feeds.id
 INNER JOIN users ON feedfollows.user_id = users.id
 `
 
-type GetUserFeedsRow struct {
-	ID        uuid.UUID
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	UserID    uuid.UUID
-	FeedID    uuid.UUID
-	FeedName  string
-	UserName  string
-}
-
-func (q *Queries) GetUserFeeds(ctx context.Context, userID uuid.UUID) ([]GetUserFeedsRow, error) {
+func (q *Queries) GetUserFeeds(ctx context.Context, userID uuid.UUID) ([]Feed, error) {
 	rows, err := q.db.QueryContext(ctx, getUserFeeds, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetUserFeedsRow
+	var items []Feed
 	for rows.Next() {
-		var i GetUserFeedsRow
+		var i Feed
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.Name,
+			&i.Url,
 			&i.UserID,
-			&i.FeedID,
-			&i.FeedName,
-			&i.UserName,
+			&i.LastFetchedAt,
 		); err != nil {
 			return nil, err
 		}

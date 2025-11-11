@@ -2,6 +2,7 @@ package main
 import ("fmt"
 		"context"
 		"github.com/eldalland/go_blog_aggregator/internal/database")
+//Supplies current user info to handlers that require it
 func loginMiddleware(handler func(s *state, cmd command, user database.User)error) func(*state,command)error{
 	return func(s *state, cmd command)error{
 		currUser, err := s.db.GetUser(context.Background(),s.cfg.CurrentUsername)

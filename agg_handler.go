@@ -1,15 +1,25 @@
 package main
-import ("fmt"
-"context"
-"github.com/eldalland/go_blog_aggregator/internal/rssfeed")
-//returns RSSfeed data from supplied url
-func handlerAgg(s *state, cmd command) error{
-	feedUrl := "https://www.wagslane.dev/index.xml"
 
-	feed, err := rssfeed.FetchFeed(context.Background(),feedUrl)
-	if err != nil{
-		return fmt.Errorf("error fetching rss feed: %s",err)
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+//begins aggregating posts from supplied feeds at an interval
+func handlerAgg(s *state, cmd command) error {
+	if len(cmd.args) == 0 {
+		fmt.Printf("enter a duration")
+		os.Exit(1)
 	}
-	fmt.Printf("RSSFeed: %s",feed)
+	duration, err := time.ParseDuration(cmd.args[0])
+	if err != nil {
+		fmt.Printf("error parsing duration: %s", err)
+		os.Exit(1)
+	}
+	ticker := time.NewTicker(duration)
+	for ; ; <-ticker.C {
+		scrapeFeeds(s)
+	}
 	return nil
 }

@@ -51,6 +51,7 @@ func main(){
 	currCommands.register("follow",loginMiddleware(handlerFollow))
 	currCommands.register("following",loginMiddleware(handleFollowing))
 	currCommands.register("unfollow", loginMiddleware(handleUnfollow))
+	currCommands.register("browse",loginMiddleware(handlerBrowse))
 	userInput := os.Args
 	//checks user input for command and args, then calls corresponding handler through run function
 	if len(userInput) < 2{

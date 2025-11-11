@@ -6,7 +6,7 @@ import (
 "github.com/eldalland/go_blog_aggregator/internal/database"
 	"os"
 )
-
+//returns what feed the current user is following
 func handleFollowing(s *state, cmd command, user database.User) error {
 
 	following, err := s.db.GetUserFeeds(context.Background(), user.ID)
@@ -16,7 +16,7 @@ func handleFollowing(s *state, cmd command, user database.User) error {
 	}
 	fmt.Printf("%s is following these feeds: ", s.cfg.CurrentUsername)
 	for _,entry := range following {
-		fmt.Printf("\n%s", entry.FeedName)
+		fmt.Printf("\n%s", entry.Name)
 	}
 	return nil
 }

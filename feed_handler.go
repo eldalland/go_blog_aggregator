@@ -5,7 +5,7 @@ import ("fmt"
 		"github.com/google/uuid"
 		"os"
 		"github.com/eldalland/go_blog_aggregator/internal/database")
-		//Inserts a new feed into feeds table
+		//Inserts a new feed into feeds table, then has the current user follow that feed
 func handlerFeed(s *state, cmd command,user database.User) error{
 	if len(cmd.args) < 2{
 		fmt.Printf("please enter the name of the feed as well as the url")
@@ -36,11 +36,6 @@ func handlerFeed(s *state, cmd command,user database.User) error{
 
 	
 	currUrl := cmd.args[1]
-	
-	if err != nil{
-		fmt.Printf("error getting user: %s",err)
-		os.Exit(1)
-	}
 	feed,err = s.db.GetFeedFromURL(context.Background(),currUrl)
 	if err != nil{
 		fmt.Printf("error getting feed: %s", err)

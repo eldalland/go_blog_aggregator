@@ -11,6 +11,12 @@ func handlerReset(s *state, c command)error{
 		os.Exit(1)
 	}
 
+	err = s.db.DropPosts(context.Background())
+		if err != nil{
+		fmt.Printf("failed to drop posts table: %s\n",err)
+		os.Exit(1)
+	}
+
 	err = s.db.DropFeeds(context.Background())
 	if err != nil{
 		fmt.Printf("failed to drop feeds table: %s\n",err)
@@ -22,6 +28,7 @@ func handlerReset(s *state, c command)error{
 		os.Exit(1)
 	}
 
+	fmt.Printf("All tables successfully dropped")
 	err = s.db.CreateUsers(context.Background())
 	if err != nil{
 		fmt.Printf("failed to re-initialize users table: %s\n",err)
@@ -38,7 +45,19 @@ func handlerReset(s *state, c command)error{
 		fmt.Printf("failed to re-initialize feed_follows table: %s\n",err)
 		os.Exit(1)
 	}
-	fmt.Printf("users, feeds, and feed_follows tables successful reset")
-	
+
+	err = s.db.AddLastFetchedAt(context.Background())
+		if err != nil{
+		fmt.Printf("failed to re-add last_fetched_at column: %s\n",err)
+		os.Exit(1)
+	}
+
+	err = s.db.CreatePosts(context.Background())
+	if err != nil{
+		fmt.Printf("failed to re-initialize posts table: %s\n",err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nAll tables successful reset")
 	return nil
 }
